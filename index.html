@@ -1,1 +1,665 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Approach Training | Non-Solar Homes</title>
+<meta name="theme-color" content="#0b1017"/>
 
+<style>
+  :root{
+    --bg:#0b1017;
+    --panel:#111a25;
+    --stroke:rgba(255,255,255,.10);
+    --text:rgba(255,255,255,.94);
+    --muted:rgba(255,255,255,.70);
+    --muted2:rgba(255,255,255,.55);
+
+    /* L.O.S.-style accents (adjust later if you want exact hex codes) */
+    --gold:#FBC909;
+    --teal:#3AADBB;
+    --grad:linear-gradient(135deg,var(--gold),var(--teal));
+
+    --r:18px;
+    --shadow:0 18px 60px rgba(0,0,0,.45);
+
+    --safeT: env(safe-area-inset-top);
+    --safeB: env(safe-area-inset-bottom);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(1200px 700px at 20% -10%, rgba(251,201,9,.18), transparent 60%),
+      radial-gradient(900px 600px at 110% 10%, rgba(58,173,187,.18), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    padding: calc(14px + var(--safeT)) 14px calc(18px + var(--safeB));
+  }
+
+  .wrap{max-width:980px;margin:0 auto}
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;margin-bottom:14px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .logo{
+    width:44px;height:44px;border-radius:14px;
+    background:var(--panel);
+    display:grid;place-items:center;
+    border:1px solid var(--stroke);
+    overflow:hidden;
+  }
+  .logo img{width:100%;height:100%;object-fit:cover;display:block}
+  .title{min-width:0}
+  h1{margin:0;font-size:18px;line-height:1.15}
+  .sub{margin-top:3px;color:var(--muted);font-size:12.5px}
+
+  .toggle{
+    display:flex;align-items:center;gap:10px;
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--stroke);
+    border-radius:999px;
+    padding:8px 10px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+  .toggle label{font-size:12.5px;color:var(--muted);user-select:none}
+  .switch{
+    width:46px;height:26px;border-radius:999px;
+    background:rgba(255,255,255,.12);
+    position:relative;cursor:pointer;border:1px solid var(--stroke);
+  }
+  .knob{
+    position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:999px;
+    background:linear-gradient(135deg,rgba(255,255,255,.85),rgba(255,255,255,.45));
+    transition:transform .18s ease;
+  }
+  body.coach .knob{transform:translateX(20px)}
+  body.coach .toggle label b{color:var(--text)}
+
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border:1px solid var(--stroke);
+    border-radius:var(--r);
+    box-shadow:var(--shadow);
+    padding:14px;
+    margin:12px 0;
+  }
+
+  .cardTop{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+    margin-bottom:10px;
+  }
+  .kicker{
+    font-size:12px;color:var(--muted);
+    letter-spacing:.18em;text-transform:uppercase;
+  }
+  .card h2{margin:4px 0 0;font-size:18px}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.18);
+    padding:8px 10px;border-radius:999px;
+    color:var(--muted);
+    font-size:12.5px;
+    white-space:nowrap;
+  }
+  .pill .dot{
+    width:8px;height:8px;border-radius:999px;background:var(--teal);
+    box-shadow:0 0 0 4px rgba(58,173,187,.15);
+  }
+
+  .audioWrap{
+    display:flex;flex-direction:column;gap:10px;margin:10px 0 6px;
+  }
+  audio{width:100%}
+
+  .row{
+    display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+  }
+
+  .btn{
+    appearance:none;border:1px solid var(--stroke);
+    background:rgba(255,255,255,.06);
+    color:var(--text);
+    padding:10px 12px;border-radius:12px;
+    font-weight:600;font-size:13px;
+    cursor:pointer;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{
+    border-color:rgba(251,201,9,.35);
+    background:linear-gradient(135deg, rgba(251,201,9,.22), rgba(58,173,187,.12));
+  }
+
+  details{
+    margin-top:10px;
+    border:1px solid var(--stroke);
+    background:rgba(0,0,0,.18);
+    border-radius:14px;
+    padding:10px 12px;
+  }
+  details summary{
+    cursor:pointer;
+    color:var(--text);
+    font-weight:700;
+    list-style:none;
+  }
+  details summary::-webkit-details-marker{display:none}
+  .script{margin-top:8px;color:var(--text);line-height:1.45}
+  .script p{margin:.55em 0}
+  .highlight{
+    margin-top:10px;
+    padding:10px 12px;border-radius:14px;
+    background:rgba(251,201,9,.10);
+    border:1px solid rgba(251,201,9,.25);
+    color:rgba(255,255,255,.92);
+  }
+  .highlight b{
+    display:block;font-size:12px;color:rgba(255,255,255,.70);
+    text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px;
+  }
+
+  .choice{
+    display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;
+  }
+  .chip{
+    border:1px solid var(--stroke);
+    background:rgba(255,255,255,.05);
+    color:var(--text);
+    padding:10px 12px;border-radius:999px;
+    cursor:pointer;font-weight:700;font-size:13px;
+  }
+  .chip.active{
+    border-color:rgba(58,173,187,.45);
+    box-shadow:0 0 0 4px rgba(58,173,187,.14);
+  }
+
+  .info{
+    display:none;
+    margin-top:10px;
+    padding:10px 12px;border-radius:14px;
+    border:1px solid rgba(58,173,187,.28);
+    background:rgba(58,173,187,.10);
+    color:rgba(255,255,255,.90);
+    line-height:1.35;
+  }
+  body.coach .info{display:block}
+
+  .miniQuiz{
+    margin-top:10px;
+    padding:10px 12px;border-radius:14px;
+    border:1px dashed rgba(255,255,255,.18);
+    background:rgba(255,255,255,.04);
+    color:var(--muted);
+  }
+  .miniQuiz button{margin-top:8px}
+
+  footer{
+    margin-top:18px;
+    color:var(--muted2);
+    font-size:12.5px;
+    text-align:center;
+  }
+
+  @media (min-width: 820px){
+    h1{font-size:20px}
+    .card{padding:16px}
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">
+    <div class="logo" title="L.O.S.">
+      <!-- If you have a logo file in root, rename below to match (e.g., los-logo.png). If not, leave empty. -->
+      <img src="los-logo.png" alt="L.O.S. logo" onerror="this.style.display='none'">
+    </div>
+    <div class="title">
+      <h1>Approach Training (Non-Solar Homes)</h1>
+      <div class="sub">Door approach flow • iPhone-first • Practice + Coach mode</div>
+    </div>
+  </div>
+
+  <div class="toggle" title="Coach Mode adds quick “why this works” notes">
+    <label><b>Coach</b> Mode</label>
+    <div class="switch" id="coachSwitch" role="switch" aria-checked="false" tabindex="0">
+      <div class="knob"></div>
+    </div>
+  </div>
+</header>
+
+<!-- PART 1 -->
+<section class="card" id="part1">
+  <div class="cardTop">
+    <div>
+      <div class="kicker">Part 1</div>
+      <h2>Intro</h2>
+    </div>
+    <div class="pill"><span class="dot"></span> Start here</div>
+  </div>
+
+  <div class="audioWrap">
+    <audio controls preload="none" id="audio1">
+      <source src="approach-intro.m4a" type="audio/mp4">
+      Your browser does not support audio.
+    </audio>
+
+    <div class="row">
+      <button class="btn primary" onclick="loopSection('audio1',3)">Loop ×3</button>
+      <button class="btn" onclick="scrollToId('part2')">Next</button>
+    </div>
+  </div>
+
+  <details>
+    <summary>Show Script</summary>
+    <div class="script">
+      <p>“Hey, how’s it going? Is this the Johnson residence?</p>
+      <p>Perfect — you must be Steve. Awesome. I’m Carlos.</p>
+      <p>I’m actually working on a lot of the power projects here in the area. You’ve probably noticed those small white boxes popping up on the side of some homes.</p>
+      <p>The reason they’re doing that — and the reason we’re out here — is because of the Time-of-Use changes. Has Edison come by, or has anyone talked to you about the changes they made?”</p>
+    </div>
+
+    <div class="highlight">
+      <b>Memorize this line</b>
+      “Has Edison come by, or has anyone talked to you about the changes they made?”
+    </div>
+
+    <div class="info">
+      <b style="display:block;margin-bottom:6px;">Why this works</b>
+      It’s a low-pressure opener that builds credibility. You’re not asking them to buy—just checking what they’ve been told.
+    </div>
+
+    <div class="miniQuiz">
+      Quick check: What question ends Part 1?
+      <div><button class="btn" onclick="reveal(this,'Has Edison come by, or has anyone talked to you about the changes they made?')">Reveal</button></div>
+    </div>
+  </details>
+</section>
+
+<!-- PART 2 -->
+<section class="card" id="part2">
+  <div class="cardTop">
+    <div>
+      <div class="kicker">Part 2</div>
+      <h2>Problem (Choose)</h2>
+    </div>
+    <div class="pill"><span class="dot" style="background:var(--gold);box-shadow:0 0 0 4px rgba(251,201,9,.15)"></span> Choose one</div>
+  </div>
+
+  <div class="choice" role="tablist" aria-label="Problem options">
+    <button class="chip active" data-problem="grid" onclick="setProblem('grid', this)">Grid upgrades & rates</button>
+    <button class="chip" data-problem="peak" onclick="setProblem('peak', this)">Time-of-Use (4–9)</button>
+    <button class="chip" data-problem="shock" onclick="setProblem('shock', this)">Bill shock</button>
+  </div>
+
+  <div class="audioWrap">
+    <audio controls preload="none" id="audio2">
+      <source id="audio2src" src="approach-problem-grid-upgrades.m4a" type="audio/mp4">
+      Your browser does not support audio.
+    </audio>
+
+    <div class="row">
+      <button class="btn primary" onclick="loopSection('audio2',3)">Loop ×3</button>
+      <button class="btn" onclick="scrollToId('part3')">Next</button>
+    </div>
+  </div>
+
+  <details>
+    <summary>Show Script</summary>
+    <div class="script" id="problemScript">
+      <p><b>Grid upgrades & rates (default)</b></p>
+      <p>“Edison’s been doing major grid upgrades and infrastructure work, and the cost gets passed back to homeowners through rate increases.</p>
+      <p>So even if your habits don’t change, the bill can still climb because the pricing keeps moving.</p>
+      <p>Have you noticed that at all?”</p>
+      <p style="color:var(--muted2);margin-top:10px;">(You can swap to TOU or Bill shock above depending on the homeowner.)</p>
+    </div>
+
+    <div class="highlight">
+      <b>Memorize this line</b>
+      “Even if your habits don’t change, the bill can still climb because the pricing keeps moving.”
+    </div>
+
+    <div class="info">
+      <b style="display:block;margin-bottom:6px;">Why this works</b>
+      You’re blaming the system, not the homeowner. That reduces defensiveness and gets a quick “yeah” response.
+    </div>
+  </details>
+</section>
+
+<!-- PART 3 -->
+<section class="card" id="part3">
+  <div class="cardTop">
+    <div>
+      <div class="kicker">Part 3</div>
+      <h2>Solution (Choose)</h2>
+    </div>
+    <div class="pill"><span class="dot"></span> Match the problem</div>
+  </div>
+
+  <div class="choice" role="tablist" aria-label="Solution options">
+    <button class="chip active" data-solution="vpp" onclick="setSolution('vpp', this)">VPP program</button>
+    <button class="chip" data-solution="battery" onclick="setSolution('battery', this)">Battery = control peak</button>
+    <button class="chip" data-solution="report" onclick="setSolution('report', this)">Savings report clarity</button>
+  </div>
+
+  <div class="audioWrap">
+    <audio controls preload="none" id="audio3">
+      <source id="audio3src" src="approach-solution-vpp.m4a" type="audio/mp4">
+      Your browser does not support audio.
+    </audio>
+
+    <div class="row">
+      <button class="btn primary" onclick="loopSection('audio3',3)">Loop ×3</button>
+      <button class="btn" onclick="scrollToId('part4')">Next</button>
+    </div>
+  </div>
+
+  <details>
+    <summary>Show Script</summary>
+    <div class="script" id="solutionScript">
+      <p><b>VPP program (default)</b></p>
+      <p>“A big part of the solution is storage, and that’s where the VPP program comes in.</p>
+      <p>It’s designed to help homeowners store power and use it when the grid is stressed—so you’re not stuck paying the worst pricing when everyone needs electricity.</p>
+      <p>It also gives you outage protection when the grid goes down.”</p>
+    </div>
+
+    <div class="highlight">
+      <b>Memorize this line</b>
+      “Store power and use it when the grid is stressed.”
+    </div>
+
+    <div class="info">
+      <b style="display:block;margin-bottom:6px;">Why this works</b>
+      The solution directly answers what they just agreed was the problem—so it feels logical, not salesy.
+    </div>
+  </details>
+</section>
+
+<!-- PART 4 -->
+<section class="card" id="part4">
+  <div class="cardTop">
+    <div>
+      <div class="kicker">Part 4</div>
+      <h2>Qualification + Savings</h2>
+    </div>
+    <div class="pill"><span class="dot"></span> Set rules early</div>
+  </div>
+
+  <div class="audioWrap">
+    <audio controls preload="none" id="audio4">
+      <source src="approach-qualification.m4a" type="audio/mp4">
+      Your browser does not support audio.
+    </audio>
+
+    <div class="row">
+      <button class="btn primary" onclick="loopSection('audio4',3)">Loop ×3</button>
+      <button class="btn" onclick="scrollToId('part5')">Next</button>
+    </div>
+  </div>
+
+  <details>
+    <summary>Show Script</summary>
+    <div class="script">
+      <p>“My job is really simple — it’s to find out which homes might qualify for the program.</p>
+      <p>We make sure you have a good roof, that you get enough sunlight, and that you can produce the power.</p>
+      <p>We also make sure we can store that power for you.</p>
+      <p>If everything checks out and looks good, we’re able to provide a savings report. That report shows you what kind of savings you would have starting day one.</p>
+      <p>There’s nothing you have to pay out of pocket and nothing due upfront.</p>
+      <p>You must be able to qualify for the program, and we must be able to provide you savings on day one — otherwise, we can’t help you.</p>
+      <p>Here’s a sample bill from one of our customers. This is their July payment. As you can see, it’s only about twenty dollars.</p>
+      <p>That amount is just the base fee for staying connected to the grid. They’re not paying for power production or generation because they’re able to produce it and store it on-site.</p>
+      <p>Typically, how do you pay your power bill — online or by paper?”</p>
+    </div>
+
+    <div class="highlight">
+      <b>Memorize this line</b>
+      “We must be able to provide you savings on day one — otherwise, we can’t help you.”
+    </div>
+
+    <div class="info">
+      <b style="display:block;margin-bottom:6px;">Why this works</b>
+      You set a fair rule: if there’s no savings, you stop. That builds trust and prevents wasted time.
+    </div>
+  </details>
+</section>
+
+<!-- PART 5 -->
+<section class="card" id="part5">
+  <div class="cardTop">
+    <div>
+      <div class="kicker">Part 5</div>
+      <h2>Close (Bill Snapshot)</h2>
+    </div>
+    <div class="pill"><span class="dot"></span> Micro-commitment</div>
+  </div>
+
+  <div class="audioWrap">
+    <audio controls preload="none" id="audio5">
+      <source src="approach-close.m4a" type="audio/mp4">
+      Your browser does not support audio.
+    </audio>
+
+    <div class="row">
+      <button class="btn primary" onclick="loopSection('audio5',3)">Loop ×3</button>
+      <button class="btn" onclick="scrollToId('part6')">Next</button>
+    </div>
+  </div>
+
+  <details>
+    <summary>Show Script</summary>
+    <div class="script">
+      <p>“I just need to grab a quick snapshot of that bar graph, like the one I showed you on my bill. It shows us how much power you use throughout the year.</p>
+      <p>From there, our engineers can take a look at it and see exactly whether or not we can help you.</p>
+      <p>Again, do you pay your bill online or by paper?</p>
+      <p>Perfect. Can you grab that real quick?”</p>
+    </div>
+
+    <div class="highlight">
+      <b>Memorize this line</b>
+      “Can you grab that real quick?”
+    </div>
+
+    <div class="info">
+      <b style="display:block;margin-bottom:6px;">Why this works</b>
+      You’re asking for a small action, not a decision. Easy yes, and it advances the process.
+    </div>
+  </details>
+</section>
+
+<!-- PART 6 -->
+<section class="card" id="part6">
+  <div class="cardTop">
+    <div>
+      <div class="kicker">Part 6</div>
+      <h2>Wrap-Up + Schedule</h2>
+    </div>
+    <div class="pill"><span class="dot"></span> Two options</div>
+  </div>
+
+  <div class="audioWrap">
+    <audio controls preload="none" id="audio6">
+      <source src="approach-wrapup.m4a" type="audio/mp4">
+      Your browser does not support audio.
+    </audio>
+
+    <div class="row">
+      <button class="btn primary" onclick="loopSection('audio6',3)">Loop ×3</button>
+      <button class="btn" onclick="scrollToId('part1')">Back to top</button>
+    </div>
+  </div>
+
+  <details>
+    <summary>Show Script</summary>
+    <div class="script">
+      <p>“We’re in the area helping people today. We can come back in about 45 minutes to an hour if that works for you, or we can come back tomorrow around this same time.</p>
+      <p>Which one works better for you?</p>
+      <p>Perfect. I’ll send you a quick text right now.</p>
+      <p>If for some reason we’re not able to provide you any savings upfront, you’ll receive a text letting you know that we’ll cancel the appointment and disqualify the home.</p>
+      <p>And if anything changes on your end, please just shoot us a text and let us know ahead of time.</p>
+      <p>Other than that, we’ll see you tomorrow.”</p>
+    </div>
+
+    <div class="highlight">
+      <b>Memorize this line</b>
+      “Which one works better for you?”
+    </div>
+
+    <div class="info">
+      <b style="display:block;margin-bottom:6px;">Why this works</b>
+      Two options prevent “I’ll think about it,” while staying respectful and low pressure.
+    </div>
+  </details>
+</section>
+
+<footer>
+  L.O.S. • Approach Training • Built for mobile reps
+</footer>
+
+</div>
+
+<script>
+  // Coach mode toggle (persisted)
+  const coachSwitch = document.getElementById('coachSwitch');
+  const COACH_KEY = 'los_coach_mode';
+
+  function setCoach(on){
+    document.body.classList.toggle('coach', on);
+    coachSwitch.setAttribute('aria-checked', on ? 'true' : 'false');
+    localStorage.setItem(COACH_KEY, on ? '1' : '0');
+  }
+  coachSwitch.addEventListener('click', () => setCoach(!document.body.classList.contains('coach')));
+  coachSwitch.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setCoach(!document.body.classList.contains('coach')); }
+  });
+  setCoach(localStorage.getItem(COACH_KEY) === '1');
+
+  function scrollToId(id){
+    document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // Loop a section audio N times
+  function loopSection(audioId, times){
+    const a = document.getElementById(audioId);
+    if(!a) return;
+    let count = 0;
+    a.currentTime = 0;
+    a.play();
+    a.onended = () => {
+      count++;
+      if(count < times){
+        a.currentTime = 0;
+        a.play();
+      } else {
+        a.onended = null;
+      }
+    };
+  }
+
+  function reveal(btn, text){
+    btn.textContent = text;
+    btn.disabled = true;
+  }
+
+  // Problem selector (audio + script swap)
+  const problemMap = {
+    grid: {
+      audio: 'approach-problem-grid-upgrades.m4a',
+      html: `
+        <p><b>Grid upgrades & rates (default)</b></p>
+        <p>“Edison’s been doing major grid upgrades and infrastructure work, and the cost gets passed back to homeowners through rate increases.</p>
+        <p>So even if your habits don’t change, the bill can still climb because the pricing keeps moving.</p>
+        <p>Have you noticed that at all?”</p>
+      `
+    },
+    peak: {
+      audio: 'approach-tou.m4a',
+      html: `
+        <p><b>Time-of-Use (4–9)</b></p>
+        <p>“Due to demand and how the grid runs in California, the cost goes up the most during the 4 to 9 window.</p>
+        <p>That’s why you hear them saying not to use power during those hours—because that’s when rates hit the hardest.</p>
+        <p>Does that ring a bell?”</p>
+      `
+    },
+    shock: {
+      audio: 'approach-problem-bill-shock.m4a',
+      html: `
+        <p><b>Bill shock</b></p>
+        <p>“A lot of homeowners are seeing higher bills even when they didn’t change much.</p>
+        <p>It’s frustrating because you feel like you’re doing the same thing, but the pricing keeps shifting.</p>
+        <p>Have you felt that at all?”</p>
+      `
+    }
+  };
+
+  function setActiveChip(groupSelector, activeBtn){
+    document.querySelectorAll(groupSelector).forEach(b=>b.classList.remove('active'));
+    activeBtn.classList.add('active');
+  }
+
+  function setProblem(key, btn){
+    setActiveChip('[data-problem]', btn);
+    const cfg = problemMap[key];
+    const audio = document.getElementById('audio2');
+    const src = document.getElementById('audio2src');
+    const script = document.getElementById('problemScript');
+
+    // stop current playback
+    audio.pause(); audio.currentTime = 0;
+
+    src.src = cfg.audio;
+    audio.load();
+    script.innerHTML = cfg.html + `<p style="color:var(--muted2);margin-top:10px;">(Choose the version that matches the homeowner.)</p>`;
+  }
+
+  // Solution selector
+  const solutionMap = {
+    vpp: {
+      audio: 'approach-solution-vpp.m4a',
+      html: `
+        <p><b>VPP program (default)</b></p>
+        <p>“A big part of the solution is storage, and that’s where the VPP program comes in.</p>
+        <p>It’s designed to help homeowners store power and use it when the grid is stressed—so you’re not stuck paying the worst pricing when everyone needs electricity.</p>
+        <p>It also gives you outage protection when the grid goes down.”</p>
+      `
+    },
+    battery: {
+      audio: 'approach-solution-battery.m4a',
+      html: `
+        <p><b>Battery = control peak hours</b></p>
+        <p>“That’s why your neighbors got those big white boxes—so they can store power during the day and use it during 4 to 9 and at night.</p>
+        <p>It lets you avoid the worst pricing window and gives you backup power when the grid goes down.”</p>
+      `
+    },
+    report: {
+      audio: 'approach-solution-savings-report.m4a',
+      html: `
+        <p><b>Clarity + savings report</b></p>
+        <p>“The next step is simply running a savings report so you’re not guessing.</p>
+        <p>If we can’t show savings up front, we cancel—no wasted time.”</p>
+      `
+    }
+  };
+
+  function setSolution(key, btn){
+    setActiveChip('[data-solution]', btn);
+    const cfg = solutionMap[key];
+    const audio = document.getElementById('audio3');
+    const src = document.getElementById('audio3src');
+    const script = document.getElementById('solutionScript');
+
+    audio.pause(); audio.currentTime = 0;
+
+    src.src = cfg.audio;
+    audio.load();
+    script.innerHTML = cfg.html;
+  }
+</script>
+
+</body>
+</html>
